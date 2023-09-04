@@ -35,12 +35,7 @@ class FaceDetectorService {
     InputImageData firebaseImageMetadata = InputImageData(
       imageRotation:
           _cameraService.cameraRotation ?? InputImageRotation.rotation0deg,
-
-      // inputImageFormat: InputImageFormat.yuv_420_888,
-
-      inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw)
-          // InputImageFormatMethods.fromRawValue(image.format.raw) for new version
-          ??
+      inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw) ??
           InputImageFormat.yuv_420_888,
       size: Size(image.width.toDouble(), image.height.toDouble()),
       planeData: image.planes.map(
@@ -62,7 +57,6 @@ class FaceDetectorService {
     final bytes = allBytes.done().buffer.asUint8List();
 
     InputImage firebaseVisionImage = InputImage.fromBytes(
-      // bytes: image.planes[0].bytes,
       bytes: bytes,
       inputImageData: firebaseImageMetadata,
     );
