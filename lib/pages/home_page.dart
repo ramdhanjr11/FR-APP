@@ -66,6 +66,12 @@ class _HomePageState extends State<HomePage> {
                       ElevatedButton(
                         onPressed: () {
                           _databaseHelper.deleteAll();
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Deleted users success'),
+                            ),
+                          );
                         },
                         child: const Text('Remove All'),
                       ),

@@ -59,6 +59,7 @@ class MLService {
     output = output.reshape([192]);
 
     _predictedData = List.from(output);
+    // dev.log(_predictedData.toString(), name: 'ML SERVICE');
   }
 
   Future<User?> predict() async {

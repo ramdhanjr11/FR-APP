@@ -14,20 +14,15 @@ class FaceDetectorService {
 
   List<Face> _faces = [];
   List<Face> get faces => _faces;
-  bool get faceDetected => _faces.isNotEmpty;
+  bool get isFaceNotEmpty => _faces.isNotEmpty;
 
   void initialize() {
-    // _faceDetector = GoogleMlKit.vision.faceDetector(
-    //   FaceDetectorOptions(
-    //     performanceMode: FaceDetectorMode.accurate,
-    //   ),
-    // );
-
     _faceDetector = FaceDetector(
       options: FaceDetectorOptions(
-          performanceMode: FaceDetectorMode.fast,
-          enableContours: true,
-          enableClassification: true),
+        performanceMode: FaceDetectorMode.fast,
+        enableContours: true,
+        enableClassification: true,
+      ),
     );
   }
 
