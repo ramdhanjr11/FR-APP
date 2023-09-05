@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fr_app/locator.dart';
 import 'package:fr_app/services/camera.service.dart';
-import 'package:lottie/lottie.dart';
 
 class LivenessCameraPage extends StatefulWidget {
   const LivenessCameraPage({super.key});
@@ -54,14 +53,7 @@ class _LivenessCameraPageState extends State<LivenessCameraPage> {
             )
           : SizedBox(
               width: MediaQuery.sizeOf(context).width,
-              child: CameraPreview(
-                cameraService.cameraController!,
-                child: Center(
-                  child: Lottie.network(
-                    'https://lottie.host/670ac850-85a0-4c23-986d-4bb35cb0a476/DoIIY2rpCH.json',
-                  ),
-                ),
-              ),
+              child: CameraPreview(cameraService.cameraController!),
             ),
     );
   }

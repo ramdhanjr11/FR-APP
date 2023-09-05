@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fr_app/db/databse_helper.dart';
 import 'package:fr_app/pages/liveness_camera_page.dart';
 import 'package:fr_app/pages/register_face_page.dart';
+import 'package:fr_app/pages/registered_faces_page.dart';
 
 import '../locator.dart';
 import '../services/camera.service.dart';
@@ -116,6 +117,20 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     child: const Text('Register face'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const RegisteredFacesPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: const Text('List of registered faces'),
                   ),
                 ],
               ),

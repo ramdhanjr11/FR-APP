@@ -35,8 +35,6 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
   bool isSaving = false;
   Face? faceDetected;
   Size? imageSize;
-  static const String lottieUrl =
-      'https://lottie.host/670ac850-85a0-4c23-986d-4bb35cb0a476/DoIIY2rpCH.json';
 
   @override
   void initState() {
@@ -66,6 +64,7 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
     imageSize = cameraService.getImageSize();
 
     cameraService.cameraController?.startImageStream((image) async {
+      if (!mounted) return;
       if (isProcessing) return;
 
       isProcessing = true;
