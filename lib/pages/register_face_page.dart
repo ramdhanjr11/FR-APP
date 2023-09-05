@@ -167,7 +167,11 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
 
     isSaving = true;
 
+    Future.delayed(const Duration(milliseconds: 500));
+
     await cameraService.cameraController?.stopImageStream();
+
+    Future.delayed(const Duration(milliseconds: 500));
 
     if (!mounted) return;
 
@@ -240,7 +244,11 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: _saveUser,
+                  onPressed: () async {
+                    final isSaved = await _saveUser();
+                    if (!mounted) return;
+                    if (isSaved) Navigator.pop(context);
+                  },
                   child: const Text('Save user'),
                 ),
               ],
@@ -251,7 +259,13 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
     );
   }
 
-  Future<void> _saveUser() async {
+  _clearData() {
+    txtEditingControllerName.clear();
+    txtEditingControllerPassword.clear();
+    mlService.setPredictedData([]);
+  }
+
+  Future<bool> _saveUser() async {
     final name = txtEditingControllerName.value.text;
     final password = txtEditingControllerPassword.value.text;
     final modelData = mlService.predictedData;
@@ -259,10 +273,14 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
       if (name.isNotEmpty && password.isNotEmpty) {
         final user = User(user: name, password: password, modelData: modelData);
         await databaseHelper.insert(user);
-        log('Save user success: ${user.modelData}, ${user.user}, ${user.password}',
-            name: 'SAVE USER');
-        mlService.setPredictedData([]);
+
+        log(
+          'Save user success: ${user.modelData}, ${user.user}, ${user.password}',
+          name: 'SAVE USER',
+        );
+        _clearData();
       }
     }
+    return true;
   }
 }
