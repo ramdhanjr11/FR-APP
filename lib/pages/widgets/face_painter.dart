@@ -6,6 +6,7 @@ class FacePainter extends CustomPainter {
   final Size imageSize;
   double? scaleX, scaleY;
   Face? face;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (face == null) return;

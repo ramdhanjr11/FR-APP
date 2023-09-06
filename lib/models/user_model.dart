@@ -4,11 +4,13 @@ class User {
   String user;
   String password;
   List modelData;
+  double? currentDistance;
 
   User({
     required this.user,
     required this.password,
     required this.modelData,
+    this.currentDistance,
   });
 
   static User fromMap(Map<String, dynamic> user) {

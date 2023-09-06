@@ -46,6 +46,7 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
   void dispose() {
     cameraService.dispose();
     faceDetectorService.dispose();
+    mlService.dispose();
     super.dispose();
   }
 

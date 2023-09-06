@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer' as dev;
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
@@ -12,7 +13,7 @@ import 'image_converter.dart';
 
 class MLService {
   Interpreter? _interpreter;
-  double threshold = 0.5;
+  double threshold = 1;
 
   List _predictedData = [];
   List get predictedData => _predictedData;
@@ -59,7 +60,6 @@ class MLService {
     output = output.reshape([192]);
 
     _predictedData = List.from(output);
-    // dev.log(_predictedData.toString(), name: 'ML SERVICE');
   }
 
   Future<User?> predict() async {
@@ -116,12 +116,17 @@ class MLService {
 
     print('users.length=> ${users.length}');
 
-    for (User u in users) {
-      currDist = _euclideanDistance(u.modelData, predictedData);
+    for (User user in users) {
+      currDist = _euclideanDistance(user.modelData, predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
-        predictedResult = u;
+        predictedResult = user;
+        predictedResult.currentDistance = currDist;
       }
+      dev.log(
+        name: 'PREDICTED DATA',
+        'user: ${predictedResult?.user}, currDist: $currDist',
+      );
     }
     return predictedResult;
   }
