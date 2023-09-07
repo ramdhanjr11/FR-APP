@@ -13,6 +13,11 @@ final class RegisterUserLoading extends RegisterUserState {
   List<Object?> get props => [];
 }
 
+final class RegisterUserHasInitialized extends RegisterUserState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
 final class RegisterUserLoaded extends RegisterUserState {
   final List<User>? users;
   RegisterUserLoaded({this.users});

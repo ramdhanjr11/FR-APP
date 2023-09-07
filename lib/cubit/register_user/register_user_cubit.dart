@@ -11,9 +11,16 @@ part 'register_user_state.dart';
 
 class RegisterUserCubit extends Cubit<RegisterUserState> {
   final CameraService _cameraService;
+  CameraService get cameraService => _cameraService;
+
   final FaceDetectorService _faceDetectorService;
+  FaceDetectorService get faceDetectorService => _faceDetectorService;
+
   final MLService _mlService;
+  MLService get mlService => _mlService;
+
   final DatabaseHelper _databaseHelper;
+  DatabaseHelper get databaseHelper => _databaseHelper;
 
   RegisterUserCubit(
     this._cameraService,
@@ -22,14 +29,23 @@ class RegisterUserCubit extends Cubit<RegisterUserState> {
     this._databaseHelper,
   ) : super(RegisterUserInitial());
 
-  void getRegisteredUsers() async {
+  Future<void> initializeServices() async {
     emit(RegisterUserLoading());
+    await _cameraService.initialize();
+    _faceDetectorService.initialize();
+    emit(RegisterUserHasInitialized());
+    emit(RegisterUserLoaded());
+  }
 
-    try {
-      final result = await _databaseHelper.queryAllUsers();
-      emit(RegisterUserLoaded(users: result));
-    } catch (e) {
-      emit(RegisterUserError(e.toString()));
-    }
+  Future<void> insertUser(User user) async {
+    await databaseHelper.insert(user);
+  }
+
+  void disposeServices() {
+    emit(RegisterUserLoading());
+    _cameraService.dispose();
+    _faceDetectorService.dispose();
+    _mlService.dispose();
+    emit(RegisterUserInitial());
   }
 }

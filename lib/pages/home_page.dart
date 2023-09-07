@@ -18,7 +18,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final MLService _mlService = locator<MLService>();
-  final FaceDetectorService _mlKitService = locator<FaceDetectorService>();
+  final FaceDetectorService _faceDetectorService =
+      locator<FaceDetectorService>();
   final CameraService _cameraService = locator<CameraService>();
   final DatabaseHelper _databaseHelper = locator<DatabaseHelper>();
   bool loading = false;
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _initializeServices() async {
-    _mlKitService.initialize();
+    _faceDetectorService.initialize();
   }
 
   @override
