@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fr_app/cubit/home_user/home_user_cubit.dart';
 import 'package:fr_app/cubit/register_user/register_user_cubit.dart';
 import 'package:fr_app/cubit/registered_user/registered_user_cubit.dart';
 
@@ -23,6 +24,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => RegisterUserCubit(
             locator(),
+            locator(),
+            locator(),
+            locator(),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => HomeUserCubit(
             locator(),
             locator(),
             locator(),

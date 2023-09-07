@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fr_app/db/databse_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fr_app/cubit/home_user/home_user_cubit.dart';
 import 'package:fr_app/pages/liveness_camera_page.dart';
 import 'package:fr_app/pages/register_face_page.dart';
 import 'package:fr_app/pages/registered_faces_page.dart';
-
-import '../locator.dart';
-import '../services/camera.service.dart';
-import '../services/face_detector_service.dart';
-import '../services/ml_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,25 +13,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final MLService _mlService = locator<MLService>();
-  final FaceDetectorService _faceDetectorService =
-      locator<FaceDetectorService>();
-  final CameraService _cameraService = locator<CameraService>();
-  final DatabaseHelper _databaseHelper = locator<DatabaseHelper>();
+  late HomeUserCubit cubit;
+
   bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeServices();
+    Future.microtask(
+      () async => context.read<HomeUserCubit>().initializeServices(),
+    );
   }
 
-  _initializeServices() async {
-    _faceDetectorService.initialize();
+  @override
+  void dispose() {
+    cubit.disposeServices();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    cubit = BlocProvider.of<HomeUserCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Face Recognition Research'),
@@ -59,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          _databaseHelper.deleteAll();
+                          cubit.deleteAllUsers();
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -78,16 +76,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-          future: Future.wait([
-            _cameraService.initialize(),
-            _mlService.initialize(),
-          ]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LinearProgressIndicator();
-            }
+      body: BlocBuilder<HomeUserCubit, HomeUserState>(
+        builder: (context, state) {
+          if (state is HomeUserInitial) return const LinearProgressIndicator();
 
+          if (state is HomeUserLoading) return const LinearProgressIndicator();
+
+          if (state is HomeUserHasInitialized) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -136,7 +131,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             );
-          }),
+          }
+
+          return const LinearProgressIndicator();
+        },
+      ),
     );
   }
 }
