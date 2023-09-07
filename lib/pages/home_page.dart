@@ -30,15 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _initializeServices() async {
-    setState(() => loading = true);
-    Future.microtask(() {
-      Future.wait([
-        _cameraService.initialize(),
-        _mlService.initialize(),
-      ]);
-      _mlKitService.initialize();
-    });
-    setState(() => loading = false);
+    _mlKitService.initialize();
   }
 
   @override
@@ -85,9 +77,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: loading == true
-          ? const LinearProgressIndicator()
-          : Center(
+      body: FutureBuilder(
+          future: Future.wait([
+            _cameraService.initialize(),
+            _mlService.initialize(),
+          ]),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LinearProgressIndicator();
+            }
+
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -134,7 +134,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            ),
+            );
+          }),
     );
   }
 }
